@@ -1,0 +1,7 @@
+<div class="all">
+    <div class="box-list">
+        <ul class="list" *ngFor="let i of menu">
+            <li (click)="navigateTo(i.link)">{{i.label}}</li>
+        </ul>
+    </div>
+</div>

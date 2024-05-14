@@ -1,4 +1,4 @@
-.all{
+.all, .all-hide {
     width: 220px;
     height: 100vh;
     background-color: #40E0D0;
@@ -6,11 +6,18 @@
     font-weight: 700;
     font-size: 20px;
     font-family: monospace;
+    transition: width 0.5s;
 }
+
+.all-hide {
+    width: 60px;
+}
+
 .box-list{
     display: flex;
     flex-direction: column;
     margin-top: 14px;
+    height: 90%;
 }
 .list{
     display: flex;
@@ -22,4 +29,17 @@
     li:hover{
         cursor: pointer;
     }
+}
+.button{
+    appearance: none;
+    -webkit-appearance: none; /* Para compatibilidade com navegadores WebKit */
+    -moz-appearance: none; /* Para compatibilidade com navegadores Mozilla */
+    background-color: transparent; /* Define o fundo como transparente */
+    border: none; /* Remove a borda */
+    padding: 0; /* Remove o preenchimento */
+    margin: 0; /* Remove a margem */
+    cursor: pointer; /* Define o cursor como padrão */
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
 }

@@ -10,9 +10,14 @@ import { PayableComponent } from './layout/routes/payable/payable.component';
 import { ChecklistComponent } from './layout/routes/checklist/checklist.component';
 import { PaidComponent } from './layout/routes/paid/paid.component';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
-import { initializeApp } from "firebase/app";
-import { FirestoreService } from './services/firestore.service';
+import { ContasService } from './services/firestore.service';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {connectFirestoreEmulator, getFirestore, provideFirestore} from '@angular/fire/firestore';
+import {connectStorageEmulator, getStorage, provideStorage} from '@angular/fire/storage';
+import {Auth, connectAuthEmulator, getAuth, provideAuth} from '@angular/fire/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -23,9 +28,6 @@ const firebaseConfig = {
   messagingSenderId: "1011071984258",
   appId: "1:1011071984258:web:343dfbf40c40c98c33ca9b"
 };
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
 
 @NgModule({
   declarations: [
@@ -40,9 +42,14 @@ const app = initializeApp(firebaseConfig);
   imports: [
     BrowserModule,
     AppRoutingModule,
-    CommonModule
+    CommonModule,
+    FormsModule,
+    provideFirebaseApp(() => initializeApp(firebaseConfig)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore()),
+     
   ],
-  providers: [FirestoreService],
+  providers: [ContasService, HttpClientModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

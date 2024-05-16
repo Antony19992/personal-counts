@@ -1,1 +1,26 @@
-<p>payable works!</p>
+<div class="all">
+    <h3>Contas à pagar</h3>
+    <div class="box">
+        <ul *ngFor="let i of item$ | async">
+            <li>{{i.entidade}}</li>
+            <li>{{i.valor}}</li>
+        </ul>
+    </div>
+    <h3>Adicionar conta</h3>
+    <div class="box min-heigth flex-cl">
+        <div class="input flex-rw">
+            <label>Entidade</label>
+            <input type="text" [(ngModel)]="entidade">
+        </div>
+        <div class="input flex-rw">
+            <label>Valor R$</label>
+            <input type="number" [(ngModel)]="valor">
+        </div>
+        <div class="input flex-rw">
+            <label>Vencimento</label>
+            <input type="date" [(ngModel)]="vencimento">
+        </div>
+        <button (click)="addAccount()">Adicionar</button>
+    </div>
+    <p *ngIf="require" class="warning">favor preencher os campos</p>
+</div>

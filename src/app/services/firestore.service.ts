@@ -6,13 +6,13 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class FirestoreService {
+export class ContasService {
   item$!: Observable<any[]>;
 
   constructor(private firestore: Firestore) { }
 
   getList() {
-    const ref = collection(this.firestore, 'veiculo');
+    const ref = collection(this.firestore, 'contas');
     this.item$ = collectionData(ref);
     return this.item$;
   }

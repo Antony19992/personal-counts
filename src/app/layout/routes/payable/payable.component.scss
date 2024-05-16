@@ -1,0 +1,30 @@
+.all{
+    margin: 8px;
+
+    .box{
+        width: 260px;
+        border: 1px solid #000;
+        padding: 4px;
+        ul{
+            list-style: none;
+        }
+    }
+}
+.min-heigth{
+    min-height: 40px;
+}
+
+.flex-cl{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.flex-rw{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.warning{
+    color: red;
+    font-weight: 700;
+}

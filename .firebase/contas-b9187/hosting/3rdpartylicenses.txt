@@ -7,6 +7,9 @@ MIT
 @angular/fire
 MIT
 
+@angular/forms
+MIT
+
 @angular/platform-browser
 MIT
 
@@ -17,6 +20,12 @@ MIT
 Apache-2.0
 
 @firebase/app
+Apache-2.0
+
+@firebase/app-check
+Apache-2.0
+
+@firebase/auth
 Apache-2.0
 
 @firebase/component
@@ -215,6 +224,10 @@ to represent the company, product, or service to which they refer.**
 firebase/analytics
 
 firebase/app
+
+firebase/app-check
+
+firebase/auth
 
 firebase/firestore
 

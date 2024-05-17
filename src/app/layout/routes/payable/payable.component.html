@@ -1,9 +1,22 @@
 <div class="all">
     <h3>Contas à pagar</h3>
     <div class="box">
+        <div class="flex-rw">
+            <label for="">Entidade</label>
+            <label for="">Valor</label>
+            <label for="">Validade</label>
+            <label for="">Ação</label>
+        </div>
+        <hr>
         <ul *ngFor="let i of item$ | async">
-            <li>{{i.entidade}}</li>
-            <li>{{i.valor}}</li>
+            <li *ngIf="i.paga == false">
+                <div class="flex-rw">
+                    <label>{{i.entidade}}</label>
+                    <label>R$ {{i.valor}}</label>
+                    <label>{{i.vencimento}}</label>
+                    <button (click)="pay(i.id, i.entidade, i.valor, i.vencimento, i.recorrente)">paguei</button>
+                </div>
+            </li>
         </ul>
     </div>
     <h3>Adicionar conta</h3>
@@ -19,6 +32,13 @@
         <div class="input flex-rw">
             <label>Vencimento</label>
             <input type="date" [(ngModel)]="vencimento">
+        </div>
+        <div class="input flex-rw">
+            <label>É recorrente?</label>
+            <select name="recorrente" id="" [(ngModel)]="recurrent">
+                <option [value]="true">Sim</option>
+                <option [value]="false">Não</option>
+            </select>
         </div>
         <button (click)="addAccount()">Adicionar</button>
     </div>

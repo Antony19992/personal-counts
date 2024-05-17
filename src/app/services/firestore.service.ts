@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-
-import { Firestore, collectionData, collection, addDoc, setDoc, doc, deleteDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { doc, docData, Firestore, collection, collectionData, addDoc, setDoc, deleteDoc } from  "@angular/fire/firestore";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContasService {
+
   item$!: Observable<any[]>;
 
-  constructor(private firestore: Firestore) { }
+  constructor(
+    private firestore: Firestore
+  ) { }
 
-  getList() {
-    const ref = collection(this.firestore, 'contas');
+  getList(prop: any) {
+    const ref = collection(this.firestore, prop);
     this.item$ = collectionData(ref);
     return this.item$;
   }
@@ -33,4 +35,5 @@ export class ContasService {
   async delete(collection: string, docId: string){
     await deleteDoc(doc(this.firestore, collection, docId));
   }
+
 }

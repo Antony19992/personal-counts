@@ -9,21 +9,24 @@ import { ContasService } from 'src/app/services/firestore.service';
 })
 export class PayableComponent implements OnInit, OnDestroy {
 
-  item$?: Observable<any[]>;
+  item$!: Observable<any[]>;
 
   collection = 'conta';
   entidade?: string;
   valor?: number;
   vencimento?: Date;
-  require: boolean = false
+  recurrent: boolean = false;
+  require: boolean = false;
 
 
   constructor(
     private fire: ContasService
-  ) { }
+  ) { 
+  }
   
   ngOnInit(): void {
-    this.item$ = this.fire.getList();
+    this.item$ = this.fire.getList('conta');
+
   }
   
   ngOnDestroy(): void {
@@ -39,9 +42,15 @@ export class PayableComponent implements OnInit, OnDestroy {
       entidade: this.entidade,
       valor: this.valor,
       vencimento: this.vencimento,
-      paga: false
+      paga: false,
+      recorrente: this.recurrent,
+      id: this.returnId(this.entidade)
     }
     this.fire.insertDoc(this.collection, this.returnId(this.entidade), body);
+    this.entidade = '';
+    this.valor = undefined;
+    this.vencimento = undefined;
+    this.recurrent = false;
   }
 
   returnId(entity: string): string {
@@ -51,6 +60,19 @@ export class PayableComponent implements OnInit, OnDestroy {
                        currentDate.getFullYear().toString();
     return entity + dateString;
 }
+
+
+  pay(id: string, entity: string, value: number, vencimento: any, recorrente: boolean){
+    let obj ={
+      entidade: entity,
+      valor: value,
+      vencimento: vencimento,
+      recorrente: recorrente,
+      id: id,
+      paga: true
+    }
+    this.fire.updateDoc('conta', id, obj);
+  }
 
 
 }

@@ -9,7 +9,7 @@
         </div>
         <hr>
         <ul *ngFor="let i of item$ | async">
-            <li *ngIf="i.paga == false">
+            <li *ngIf="i.paga == false && isCurrentOrPastMonth(i.vencimento)">
                 <div class="flex-rw">
                     <label>{{i.entidade}}</label>
                     <label>R$ {{i.valor}}</label>

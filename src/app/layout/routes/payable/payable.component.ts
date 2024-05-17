@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { ContasService } from 'src/app/services/firestore.service';
 
 @Component({
@@ -17,6 +17,7 @@ export class PayableComponent implements OnInit, OnDestroy {
   vencimento?: Date;
   recurrent: boolean = false;
   require: boolean = false;
+  currentDate = new Date();
 
 
   constructor(
@@ -26,6 +27,7 @@ export class PayableComponent implements OnInit, OnDestroy {
   
   ngOnInit(): void {
     this.item$ = this.fire.getList('conta');
+    this.includeRecurrent();
 
   }
   
@@ -44,21 +46,29 @@ export class PayableComponent implements OnInit, OnDestroy {
       vencimento: this.vencimento,
       paga: false,
       recorrente: this.recurrent,
-      id: this.returnId(this.entidade)
+      id: this.returnId(this.entidade, false)
     }
-    this.fire.insertDoc(this.collection, this.returnId(this.entidade), body);
+    this.fire.insertDoc(this.collection, this.returnId(this.entidade, false), body);
     this.entidade = '';
     this.valor = undefined;
     this.vencimento = undefined;
     this.recurrent = false;
   }
 
-  returnId(entity: string): string {
-    const currentDate = new Date();
-    const dateString = currentDate.getDate().toString().padStart(2, '0') + 
-                       (currentDate.getMonth() + 1).toString().padStart(2, '0') + 
-                       currentDate.getFullYear().toString();
-    return entity + dateString;
+  returnId(entity: string, recurrent: boolean): string {
+    if(recurrent){
+      const currentDate = new Date();
+      const dateString = currentDate.getDate().toString().padStart(2, '0') + 
+                         (currentDate.getMonth() + 2).toString().padStart(2, '0') + 
+                         currentDate.getFullYear().toString();
+      return entity + dateString;
+    }else{
+      const currentDate = new Date();
+      const dateString = currentDate.getDate().toString().padStart(2, '0') + 
+                         (currentDate.getMonth() + 1).toString().padStart(2, '0') + 
+                         currentDate.getFullYear().toString();
+      return entity + dateString;
+    }
 }
 
 
@@ -72,6 +82,40 @@ export class PayableComponent implements OnInit, OnDestroy {
       paga: true
     }
     this.fire.updateDoc('conta', id, obj);
+  }
+
+  includeRecurrent(){
+    let list = this.item$.pipe(
+      map(items => items.filter(item => item.recorrente != false))
+    );
+    list.subscribe(
+      items => {
+        items.forEach(item => {
+          let vencimento = new Date(item.vencimento);
+          let nextMonthDate = new Date(vencimento);
+          nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+          if (vencimento.getMonth() !== (new Date().getMonth() + 1) % 12) {
+            let newItem = {
+              ...item,
+              vencimento: `${nextMonthDate.getFullYear()}-${(nextMonthDate.getMonth() + 1).toString().padStart(2, '0')}-${nextMonthDate.getDate().toString().padStart(2, '0')}`,
+              id: this.returnId(item.entidade, true)
+            };
+            this.fire.insertDoc(this.collection, newItem.id, newItem);
+          }
+        });
+      }
+    )
+  }
+
+  isCurrentOrPastMonth(vencimento: string): boolean {
+    const dueDate = new Date(vencimento);
+    const currentYear = this.currentDate.getFullYear();
+    const currentMonth = this.currentDate.getMonth();
+    const dueYear = dueDate.getFullYear();
+    const dueMonth = dueDate.getMonth();
+
+    // Verifica se o vencimento é no mês atual ou em meses anteriores
+    return (dueYear < currentYear || (dueYear === currentYear && dueMonth <= currentMonth));
   }
 
 

@@ -18,6 +18,8 @@ export class PayableComponent implements OnInit, OnDestroy {
   recurrent: boolean = false;
   require: boolean = false;
   currentDate = new Date();
+  confirm: boolean = false;
+  accountConfirm: string = '';
 
 
   constructor(
@@ -72,16 +74,12 @@ export class PayableComponent implements OnInit, OnDestroy {
 }
 
 
-  pay(id: string, entity: string, value: number, vencimento: any, recorrente: boolean){
-    let obj ={
-      entidade: entity,
-      valor: value,
-      vencimento: vencimento,
-      recorrente: recorrente,
-      id: id,
-      paga: true
-    }
-    this.fire.updateDoc('conta', id, obj);
+  pay(){
+    let objPay = sessionStorage.getItem('objPay');
+    let responseObjPay = JSON.parse(objPay!);
+    this.accountConfirm = '';
+    this.fire.updateDoc('conta', responseObjPay.id, responseObjPay);
+    this.confirm = !this.confirm;
   }
 
   includeRecurrent(){
@@ -118,5 +116,22 @@ export class PayableComponent implements OnInit, OnDestroy {
     return (dueYear < currentYear || (dueYear === currentYear && dueMonth <= currentMonth));
   }
 
+  confirmPay(id: string, entity: string, value: number, vencimento: any, recorrente: boolean){
+    let obj = {
+      entidade: entity,
+      valor: value,
+      vencimento: vencimento,
+      recorrente: recorrente,
+      id: id,
+      paga: true
+    }
+    this.accountConfirm = entity;
+    sessionStorage.setItem('objPay', JSON.stringify(obj))
+    this.confirm = !this.confirm
+  }
+
+  cancel(){
+    this.confirm = !this.confirm;
+  }
 
 }

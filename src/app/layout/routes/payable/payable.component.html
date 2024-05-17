@@ -14,7 +14,7 @@
                     <label>{{i.entidade}}</label>
                     <label>R$ {{i.valor}}</label>
                     <label>{{i.vencimento}}</label>
-                    <button (click)="pay(i.id, i.entidade, i.valor, i.vencimento, i.recorrente)">paguei</button>
+                    <button (click)="confirmPay(i.id, i.entidade, i.valor, i.vencimento, i.recorrente)">paguei</button>
                 </div>
             </li>
         </ul>
@@ -43,4 +43,14 @@
         <button (click)="addAccount()">Adicionar</button>
     </div>
     <p *ngIf="require" class="warning">favor preencher os campos</p>
+
+    <br>
+    <div *ngIf="confirm" class="box min-heigth">
+        <h4>Confirmar que a conta foi paga?</h4>
+        <h5>Conta: {{accountConfirm}}</h5>
+        <div class="inpu flex-rw">
+            <button (click)="pay()">Sim</button>
+            <button (click)="cancel()">Não</button>
+        </div>
+    </div>
 </div>
